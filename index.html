@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Dashboard de Estudio · Atención a la Dependencia</title>
+  <meta name="description" content="Dashboard interactivo de preguntas para estudiar Atención a la Dependencia: nutrición, disfagia, caídas, UPP, signos vitales y microorganismos.">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🩺</text></svg>">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <div class="bg-orbs" aria-hidden="true"><span></span><span></span><span></span></div>
+
+  <header class="topbar">
+    <a class="brand" href="#" id="brand">
+      <span class="brand-logo">🩺</span>
+      <span class="brand-text"><b>Atención a la Dependencia</b><small>Dashboard de estudio</small></span>
+    </a>
+    <div class="topbar-actions">
+      <button class="icon-btn" id="themeBtn" title="Cambiar tema claro/oscuro" aria-label="Cambiar tema">🌙</button>
+      <button class="icon-btn" id="resetBtn" title="Reiniciar progreso" aria-label="Reiniciar progreso">🗑️</button>
+    </div>
+  </header>
+
+  <main>
+    <!-- ===================== INICIO ===================== -->
+    <section id="home" class="view active">
+      <div class="hero">
+        <div class="hero-text">
+          <span class="chip">📚 Material de clase · 7 PDF · 8 temas</span>
+          <h1>Estudiá jugando,<br><span class="grad">aprobá con seguridad</span></h1>
+          <p>Más de 100 preguntas basadas en tus presentaciones, con explicación en cada respuesta, seguimiento de progreso y repaso de errores.</p>
+          <div class="hero-actions">
+            <button class="btn primary" id="mixBtn">🎲 Simulacro mixto (20)</button>
+            <button class="btn ghost" id="reviewBtn">🔁 Repasar mis errores <span class="badge" id="wrongCount">0</span></button>
+          </div>
+        </div>
+        <div class="hero-visual">
+          <div class="ring-card">
+            <svg viewBox="0 0 120 120" class="ring big" aria-hidden="true">
+              <circle class="ring-bg" cx="60" cy="60" r="52"/>
+              <circle class="ring-fg" id="globalRing" cx="60" cy="60" r="52"/>
+            </svg>
+            <div class="ring-label"><b id="globalPct">0%</b><small>precisión global</small></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="stats">
+        <div class="stat"><span>📝</span><div><b id="stTotal">0</b><small>preguntas en el banco</small></div></div>
+        <div class="stat"><span>✅</span><div><b id="stAnswered">0</b><small>respondidas</small></div></div>
+        <div class="stat"><span>🏆</span><div><b id="stMastered">0/8</b><small>temas dominados (≥ 80 %)</small></div></div>
+        <div class="stat"><span>🔥</span><div><b id="stStreak">0</b><small>mejor racha</small></div></div>
+      </div>
+
+      <div class="section-title">
+        <h2>Temas</h2>
+        <p>Elegí un tema y comenzá el cuestionario. Las preguntas y respuestas se mezclan en cada intento.</p>
+      </div>
+      <div id="topicGrid" class="grid"></div>
+
+      <div class="section-title">
+        <h2>Tu progreso por tema</h2>
+        <p>Mejor resultado y último intento de cada cuestionario.</p>
+      </div>
+      <div id="progressPanel" class="panel"></div>
+
+      <footer class="footer">
+        Contenido elaborado a partir del material del curso «Atención a la Dependencia».<br>
+        Herramienta de estudio: ante dudas clínicas, consultá siempre al equipo de salud.
+      </footer>
+    </section>
+
+    <!-- ===================== CUESTIONARIO ===================== -->
+    <section id="quiz" class="view">
+      <div class="quiz-head">
+        <button class="btn ghost small" id="exitBtn">← Salir</button>
+        <div class="quiz-title" id="quizTitle"></div>
+        <div class="quiz-score">✅ <b id="qScore">0</b> &nbsp;🔥 <b id="qStreak">0</b></div>
+      </div>
+      <div class="progress"><div class="progress-bar" id="qBar"></div></div>
+      <div class="quiz-count" id="qCount"></div>
+
+      <div class="quiz-body">
+        <figure class="quiz-figure" id="qFigure">
+          <img id="qImg" alt="" loading="lazy">
+          <figcaption id="qCap"></figcaption>
+        </figure>
+        <div class="quiz-card">
+          <span class="tag" id="qTag"></span>
+          <h3 id="qText"></h3>
+          <div id="qOptions" class="options" role="group" aria-label="Opciones de respuesta"></div>
+          <div id="qFeedback" class="feedback" aria-live="polite"></div>
+          <div class="quiz-actions">
+            <span class="hint">Atajos: 1–4 elegir · Enter siguiente</span>
+            <button class="btn primary" id="nextBtn" disabled>Siguiente →</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== RESULTADOS ===================== -->
+    <section id="results" class="view">
+      <div class="result-card">
+        <div class="ring-card">
+          <svg viewBox="0 0 120 120" class="ring big" aria-hidden="true">
+            <circle class="ring-bg" cx="60" cy="60" r="52"/>
+            <circle class="ring-fg" id="resRing" cx="60" cy="60" r="52"/>
+          </svg>
+          <div class="ring-label"><b id="resPct">0%</b><small id="resFrac"></small></div>
+        </div>
+        <div class="result-text">
+          <span class="chip" id="resTopic"></span>
+          <h2 id="resTitle"></h2>
+          <p id="resMsg"></p>
+          <div class="hero-actions">
+            <button class="btn primary" id="retryBtn">🔄 Reintentar</button>
+            <button class="btn ghost" id="retryWrongBtn">🎯 Solo las falladas</button>
+            <button class="btn ghost" id="homeBtn">🏠 Inicio</button>
+          </div>
+        </div>
+      </div>
+      <div class="section-title"><h2>Revisión de respuestas</h2><p id="reviewSub"></p></div>
+      <div id="reviewList" class="review"></div>
+    </section>
+  </main>
+
+  <div class="modal" id="modal" hidden>
+    <div class="modal-box">
+      <h3 id="modalTitle"></h3>
+      <p id="modalText"></p>
+      <div class="modal-actions">
+        <button class="btn ghost" id="modalNo">Cancelar</button>
+        <button class="btn primary" id="modalYes">Aceptar</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/data.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
